@@ -1,0 +1,163 @@
+<view class="section"  style="width: 100% ;height: 100%">
+
+    <!--tab栏-->
+    <view class="tab-nav">
+        <view class="tab-nav-item {{tabIndex === '0' ? 'current' : ''}}" data-tab-index="0" catchtap="changeTab">课单</view>
+        <view class="tab-nav-item {{tabIndex === '1' ? 'current' : ''}}" data-tab-index="1" catchtap="changeTab">微课</view>
+        <navigator url="/pages/home/filte?labelId={{labelId}}&priceType={{priceType}}&categoryIds={{categoryIds}}" hover-class="" class="tab-nav-item "  catchtap="changeTab" style="color: #ff8814;width: 20%;font-size: 28rpx">筛选
+           <!-- <view class="tab-nav-item "  catchtap="changeTab" style="color: #ff8814" >筛选</view>-->
+        </navigator>
+    </view>
+  <!--  <scroll-view  scroll-x ="false" scroll-y="true" style="height:1300rpx;position:relative; z-index:0;margin-top: 72rpx" lower-threshold="50"
+                  bindscrolltolower="onLoadMore" bindscrolltoupper="onRefesh" >
+
+    </scroll-view>-->
+
+
+
+
+    <scroll-view  scroll-x ="false" scroll-y="true" style="height:1300rpx;position:relative; z-index:0;margin-top: 72rpx" lower-threshold="0"
+                  bindscrolltolower="onLoadMore"  >
+
+        <!--listview1:课单列表-->
+        <view wx:if="{{tabIndex === '0' }}"  class="wxgrid" style="margin-left: 5%;margin-top: 5%;">
+            <view wx:for="{{wxgrid.rows}}" wx:for-index="i" class="wxrow" wx:if="{{!netStateBean.contentHidden}}">
+                <view wx:for="{{wxgrid.cols}}" wx:for-index="j" class="wxcol" style="width:32%;" ><!--style="width:{{item.width}}%;"-->
+
+                    <view class="row-container" >
+                       <!-- <block wx:for-items="{{albums}}" wx:for-item="albumItem">-->
+                            <view class="row-album-item" style="width: 100%;padding-right: 7%">
+                                <navigator url="/pages/lession/album?id={{wxgrid.data.classifies[i][j].id}}" hover-class="">
+                                    <image mode="aspectFill" src="{{wxgrid.data.classifies[i][j].coverUrl}}" class="album-cover-img"/>
+                                    <text class="album-name">{{wxgrid.data.classifies[i][j].name}}</text>
+                                </navigator>
+                            </view>
+                      <!--  </block>-->
+                    </view>
+
+                </view>
+                <view class="loadmore_view" wx:if="{{!netStateBean.loadmoreHidden}}">
+                    {{netStateBean.loadmoreMsg}}
+                </view>
+            </view>
+
+            <view class ="empty_view" wx:if="{{!netStateBean.emptyHidden}}" >
+                <view class="center_wrapper">
+                    <view class="center_child" >
+                        <icon type="info" size="50" />
+                        <view style="font-size: large;margin-top: 15rpx;"> {{netStateBean.emptyMsg}}</view>
+                    </view>
+                </view>
+            </view>
+
+            <view class ="error_view" wx:if="{{!netStateBean.errorHidden}}" >
+                <view class="center_wrapper">
+                    <view class="center_child" >
+                        <icon type="warn" size="50" />
+                        <view style="font-size: large;margin-top: 15rpx;max-width: 650rpx;max-lines: 3"> {{netStateBean.errorMsg}}</view>
+                        <button style="margin-top: 20rpx;width: 650rpx" type="warn"  loading="{{loading}}"
+                                disabled="{{disabled}}" bindtap="onRetry" hover-class="other-button-hover"> 点击重试 </button>
+                    </view>
+                </view>
+            </view>
+
+
+        </view>
+
+
+
+    <!--listview2:微课列表-->
+    <!--<scroll-view wx:if="{{tabIndex === '1' }}" scroll-x ="false" scroll-y="true" style="height:100%;position:relative; z-index:0;margin-top: 72rpx" lower-threshold="0"
+                  bindscrolltolower="onLoadMore1" bindscrolltoupper="onRefesh1" >-->
+        <view wx:if="{{tabIndex === '1' }}">
+            <view wx:if="{{!netStateBean1.contentHidden}}">
+            <block   wx:for-items="{{voices}}" wx:for-item="item" wx:for-index="i" >
+
+                        <navigator url="/pages/lession/detail?id={{item.id}}&title={{item.title}}" hover-class="">
+                            <view class="l-r l-c lession-item">
+                                <view>
+                                    <image class="lession-cover" src="{{item.coverUrl}}"/>
+                                </view>
+                                <view class="l_auto lession-item-right">
+                                    <text class="lession-name">{{item.title}}</text>
+                                    <view style="flex-direction:row;display:flex;margin-top:12px;width:100%;height:30px;line-height:30px">
+                                        <text class="lession-author">{{item.nickname}}</text>
+                                        <text class="play-count" >播放量 {{item.playCount}}</text>
+
+                                        <view class="aliagn-parent-right" style="flex-direction:row;display:flex;">
+
+                                            <text class="lesson-fee-discount" wx:if="{{!item.discountPrice==0}}">{{item.discountPrice}} </text>
+                                            <text class="lesson-fee">{{item.price}}</text>
+                                        </view>
+                                    </view>
+                                </view>
+                            </view>
+                            <view wx:if="{{info.qualityVoice.length-1 > index}}" class="lession-split-line"/>
+                        </navigator>
+
+            </block>
+
+                <view class="loadmore_view" wx:if="{{!netStateBean1.loadmoreHidden}}">
+                    {{netStateBean1.loadmoreMsg}}
+                </view>
+            </view>
+
+
+            <view class ="empty_view" wx:if="{{!netStateBean1.emptyHidden}}" >
+                <view class="center_wrapper">
+                    <view class="center_child" >
+                        <icon type="info" size="50" />
+                        <view style="font-size: large;margin-top: 15rpx;"> {{netStateBean1.emptyMsg}}</view>
+                    </view>
+                </view>
+            </view>
+
+            <view class ="error_view" wx:if="{{!netStateBean1.errorHidden}}" >
+                <view class="center_wrapper">
+                    <view class="center_child" >
+                        <icon type="warn" size="50" />
+                        <view style="font-size: large;margin-top: 15rpx;max-width: 650rpx;max-lines: 3"> {{netStateBean1.errorMsg}}</view>
+                        <button style="margin-top: 20rpx;width: 650rpx" type="warn"  loading="{{loading}}"
+                                disabled="{{disabled}}" bindtap="onRetry" hover-class="other-button-hover"> 点击重试 </button>
+                    </view>
+                </view>
+            </view>
+
+
+
+        </view>
+
+    </scroll-view>
+
+
+
+</view>
+
+<!--<view class ="empty_view" wx:if="{{!netStateBean.emptyHidden}}" >
+    <view class="center_wrapper">
+        <view class="center_child" >
+            <icon type="info" size="50" style="margin-top: 550rpx"/>
+            <view style="font-size: large;margin-top: 15rpx;"> {{netStateBean.emptyMsg}}</view>
+        </view>
+    </view>
+</view>
+
+<view class ="error_view" wx:if="{{!netStateBean.errorHidden}}" >
+    <view class="center_wrapper">
+        <view class="center_child" >
+            <icon type="warn" size="50" />
+            <view style="font-size: large;margin-top: 15rpx;max-width: 650rpx;max-lines: 3"> {{netStateBean.errorMsg}}</view>
+            <button style="margin-top: 20rpx;width: 650rpx" type="warn"  loading="{{loading}}"
+                    disabled="{{disabled}}" bindtap="onRetry" hover-class="other-button-hover"> 点击重试 </button>
+        </view>
+    </view>
+</view>-->
+
+<!--
+<loading wx:if="{{!netStateBean.loadingHidden}}" >
+    加载中...
+</loading>
+
+<toast hidden="{{netStateBean.toastHidden}}" duration="1500" bindchange="toastDismiss">
+    {{netStateBean.toastMsg}}
+</toast>-->

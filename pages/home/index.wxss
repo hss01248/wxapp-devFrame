@@ -1,0 +1,36 @@
+.nav-container{
+    display: flex;
+    flex-direction: row;
+    height: 40px;
+    margin-top:12px;
+    /*padding-top: 12px;
+    padding-bottom: 12px;*/
+}
+
+.nav-container .nav-btn{
+    display: block;
+    /*border: 1px solid #eaeaea;*/
+    border-radius: 10px;
+    line-height: 40px;
+    width: 22%;
+    text-align: center;
+    color: #666666;
+    font-size: 14px;
+    margin-left: 2%;
+}
+
+.counselor-avatar-img{
+    width:100%;
+   /* height:auto;*/
+    height:200rpx;
+
+
+}
+
+text {
+  font-size: 15px;
+  color: #444;
+}
+.c-1 {
+  color: #09bb07;
+}

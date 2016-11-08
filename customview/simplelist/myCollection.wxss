@@ -1,0 +1,10 @@
+.image-container {
+  width: 100%;
+  height: 50%;
+}
+
+.big_image {
+  width: 100%;
+  height: 50%;
+}
+

@@ -1,0 +1,22 @@
+{
+  "pages":[
+    "pages/home/index",
+
+
+    "pages/home/moreclasses",
+    "pages/home/morefree",
+    "pages/home/filte",
+    "pages/home/searchByTag"
+     
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "",
+    "navigationBarBackgroundColor": "#14b394",
+    "backgroundColor": "#fbf9fe",
+    "enablePullDownRefresh": true
+  },
+
+  "debug": true
+}

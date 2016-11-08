@@ -1,0 +1,72 @@
+<!--index.wxml-->
+
+<view class="section" style="width: 100% ;height: 100%">
+
+
+  <scroll-view wx:if="{{!netStateBean.contentHidden}}" scroll-y="true" style="height:1300rpx;position:relative; z-index:0;" lower-threshold="50"
+               bindscrolltolower="onLoadMore" bindscrolltoupper="onRefesh" >
+
+      <view class="list_data">
+          <block wx:for-items="{{infos}}" wx:for-item="item">
+                  <!--todo 这里写页面的具体内容 ,上方style也需自定义-->
+              <navigator url="/pages/lession/detail?id={{item.id}}&title={{item.title}}" hover-class="">
+                  <view class="l-r l-c lession-item">
+                      <view>
+                          <image class="lession-cover" src="{{item.coverUrl}}"/>
+                      </view>
+                      <view class="l_auto lession-item-right">
+                          <text class="lession-name">{{item.title}}</text>
+                          <view style="flex-direction:row;display:flex;margin-top:12px;width:100%;height:30px;line-height:30px">
+                              <text class="lession-author">{{item.nickname}}</text>
+                              <text class="play-count aliagn-parent-right" >播放量 {{item.playCount}}</text>
+
+                              <!--<view class="aliagn-parent-right" style="flex-direction:row;display:flex;">
+
+                                  <text class="lesson-fee-discount" wx:if="{{!item.discountPrice==0}}">{{item.discountPrice}} </text>
+                                  <text class="lesson-fee">{{item.price}}</text>
+                              </view>-->
+                          </view>
+                      </view>
+                  </view>
+                  <view wx:if="{{info.qualityVoice.length-1 > index}}" class="lession-split-line"/>
+              </navigator>
+
+
+
+
+          </block>
+      </view>
+
+          <view class="loadmore_view" wx:if="{{!netStateBean.loadmoreHidden}}" >
+              {{netStateBean.loadmoreMsg}}
+          </view>
+
+    </scroll-view>
+
+    <view class ="empty_view" wx:if="{{!netStateBean.emptyHidden}}"   >
+        <view class="center_wrapper" >
+            <view class="center_child" >
+                <icon type="info" size="50"/>
+                <view style="font-size: large;margin-top: 15rpx;"> {{netStateBean.emptyMsg}}</view>
+            </view>
+        </view>
+    </view>
+
+    <view class ="error_view" wx:if="{{!netStateBean.errorHidden}}"  >
+        <view class="center_wrapper">
+            <view class="center_child" >
+                <icon type="warn" size="50" />
+                <view style="font-size: large;margin-top: 15rpx;"> {{'加载失败了: '+netStateBean.errorMsg}}</view>
+                <button style="margin-top: 20rpx;width: 600rpx" type="warn"  loading="{{loading}}"
+                        disabled="{{disabled}}" bindtap="onRetry" hover-class="other-button-hover"> 点击重试 </button>
+            </view>
+        </view>
+    </view>
+
+
+
+
+
+
+
+</view>

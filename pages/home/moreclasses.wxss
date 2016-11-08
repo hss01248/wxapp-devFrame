@@ -1,0 +1,37 @@
+/*@import "../../style/wxgrid.wxss";*/
+
+.tab-nav{
+    height: 72rpx;
+    background: #F0F0F0;
+    width:100%;
+    position: fixed;
+    top:0;
+    z-index:1;
+    overflow: hidden;
+}
+
+
+.tab-nav-item{
+    display:inline-block;
+    width: 40%;
+    color: #333333;
+    text-align: center;
+    line-height: 72rpx;
+    font-size: 30rpx;
+    position: relative;
+}
+
+.current::after{
+    content: "";
+    height: 5px;
+    position: absolute;
+    left: 20%;
+    right: 20%;
+    bottom: -3px;
+    background: #1c8873;
+}
+
+.current{
+    color:#1c8873;
+    font-size: 32rpx;
+}

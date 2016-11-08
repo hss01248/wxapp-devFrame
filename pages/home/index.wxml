@@ -1,0 +1,174 @@
+
+<view  wx:if="{{!netStateBean.contentHidden}}">
+
+    <!--搜索-->
+    <navigator url="/pages/search/index" hover-class="">
+        <view class = "search_holder">
+            <view class = "search_input view">
+                <input class="search-input-input" name="articleSearchWord" placeholder="请输入关键字检索" id="{{article_input_id}}" bindinput="bindInput"/>
+            </view>
+        </view>
+    </navigator>
+
+    <!--轮播图-->
+    <view class="section-swiper" style="margin-top:-45px"  >
+        <swiper class="swiper" indicator-dots="true"  autoplay="true" interval="5000" duration="1000" bindchange="swiperchange" bindtap="clickSwiper">
+            <block wx:for-items="{{adinfos}}">
+                <swiper-item>
+                    <image mode="aspectFill" src="{{item.url}}" class="slide-image"/>
+                </swiper-item>
+            </block>
+        </swiper>
+    </view>
+
+    <view class="nav-container">
+        <navigator url="/pages/home/searchByTag?labelIds=1&title=幼儿" hover-class="" class="nav-btn" style="border:1px solid #f8cea8">幼儿
+            <!-- <text class="nav-btn" style="border:1px solid #f8cea8" ></text>-->
+        </navigator>
+        <navigator url="/pages/home/searchByTag?labelIds=2&title=小学生" hover-class="" class="nav-btn" style="border:1px solid #c3ddc3">小学生
+           <!--  <text class="nav-btn" style="border:1px solid #c3ddc3"></text>-->
+        </navigator>
+         <navigator url="/pages/home/searchByTag?labelIds=3&title=初中生" hover-class="" class="nav-btn" style="border:1px solid #ade0e8">初中生
+
+         </navigator>
+         <navigator url="/pages/home/searchByTag?labelIds=4&title=高中生" hover-class="" class="nav-btn" style="border:1px solid #d9c5e3">高中生
+           <!-- <text class="nav-btn" style="border:1px solid #d9c5e3">高中生</text>-->
+          </navigator>
+    </view>
+
+    <block wx:for-items="{{recommendAlbum}}" wx:for-item="album">
+        <view class="itemContainer">
+            <view class="item-title-container">
+                <text class="itemTitle">{{album.title}}</text>
+                <view style="width:100%">
+                    <navigator url="/pages/home/moreclasses?category=album&albumType=2" hover-class="">
+                        <text class="more">更多</text>
+                    </navigator>
+                </view>
+            </view>
+            <block wx:for-items="{{album.items}}" wx:for-item="itemList">
+                <view class="row-container">
+                    <block wx:for-items="{{itemList}}" wx:for-item="albumItem">
+                        <view class="row-album-item">
+                            <navigator url="/pages/lession/album?id={{albumItem.id}}" hover-class="">
+                                <image mode="aspectFill" src="{{albumItem.coverUrl}}" class="album-cover-img"/>
+                                <text class="album-name">{{albumItem.name}}</text>
+                            </navigator>
+                        </view>
+                    </block>
+                </view>
+            </block>
+        </view>
+    </block>
+
+    <block wx:for-items="{{recommendCounselor}}" wx:for-item="counselorList">
+        <view class="itemContainer">
+            <view class="item-title-container">
+                <text class="itemTitle">{{counselorList.title}}</text>
+                <view style="width:100%">
+                    <navigator url="/pages/expert/experts" hover-class=""><!--切换到tab2-->
+                        <text class="more">更多</text>
+                    </navigator>
+                </view>
+            </view>
+            <block wx:for-items="{{counselorList.items}}" wx:for-item="counselorItemList">
+                <view class="row-container">
+                    <block wx:for-items="{{counselorItemList}}" wx:for-item="counselorItem">
+                        <view class="row-album-item">
+                            <navigator url="/pages/expert/expertDetail?id={{counselorItem.id}}" hover-class="">
+                                <image src="{{counselorItem.avatar}}" class="counselor-avatar-img"/>
+                                <text class="counselor-name">{{counselorItem.name}}</text>
+                            </navigator>
+                        </view>
+                    </block>
+                </view>
+            </block>
+        </view>
+    </block>
+
+    <view class="itemContainer">
+        <view class="item-title-container">
+            <text class="itemTitle">免费排行榜</text>
+            <view style="width:100%">
+                <navigator url="/pages/home/morefree?category=voice&voiceType=3" hover-class="">
+                    <text class="more">更多</text>
+                </navigator>
+            </view>
+        </view>
+        <block wx:for-items="{{freeTop}}" wx:for-item="item">
+            <navigator url="/pages/lession/detail?id={{item.id}}&title={{item.title}}" hover-class="">
+                <view class="l-r l-c lession-item">
+                    <view>
+                        <image class="lession-cover" src="{{item.coverUrl}}"/>
+                    </view>
+                    <view class="l_auto lession-item-right">
+                        <text class="lession-name">{{item.name}}</text>
+                        <view style="flex-direction:row;display:flex;margin-top:12px;width:100%;height:30px;line-height:30px">
+                            <text class="lession-author">{{item.counselor}}</text>
+                            <text class="play-count" >播放量 {{item.playCount}}</text>
+                        </view>
+                    </view>
+                </view>
+                <view wx:if="{{freeTop.length-1 > index}}" class="lession-split-line"/>
+            </navigator>
+        </block>
+    </view>
+
+    <view class="itemContainer">
+        <view class="item-title-container">
+            <text class="itemTitle">付费精品</text>
+            <view style="width:100%">
+                <navigator url="/pages/home/moreclasses?category=album&albumType=1" hover-class="">
+                    <text class="more">更多</text>
+                </navigator>
+            </view>
+        </view>
+        <block wx:for-items="{{chargeTop}}" wx:for-item="albumItemList">
+            <view class="row-container">
+                <block wx:for-items="{{albumItemList}}" wx:for-item="albumItem">
+                    <view class="row-album-item">
+                        <navigator url="/pages/lession/album?id={{albumItem.id}}" hover-class="">
+                            <image mode="aspectFill" src="{{albumItem.coverUrl}}" class="album-cover-img"/>
+                            <text class="album-name">{{albumItem.name}}</text>
+                        </navigator>
+                    </view>
+                </block>
+            </view>
+        </block>
+    </view>
+
+
+</view>
+
+
+
+<view class ="empty_view" wx:if="{{!netStateBean.emptyHidden}}"   >
+    <view class="center_wrapper" >
+        <view class="center_child" >
+            <icon type="info" size="45"/>
+            <view class="msg"> {{netStateBean.emptyMsg}}</view>
+        </view>
+    </view>
+</view>
+
+<view class ="error_view" wx:if="{{!netStateBean.errorHidden}}"  >
+    <view class="center_wrapper">
+        <view class="center_child" >
+            <icon type="warn" size="45" />
+            <view class="msg"> {{netStateBean.errorMsg}}</view>
+            <button  class = "retrybtn"  type="warn"  loading="{{loading}}"
+                     disabled="{{disabled}}" bindtap="onRetry" hover-class="other-button-hover"> 点击重试 </button>
+        </view>
+    </view>
+</view>
+
+
+<!--<loading wx:if="{{!netStateBean.loadingHidden}}" >
+    加载中...
+</loading>
+
+<toast wx:if="{{!netStateBean.toastHidden}}" duration="1500" bindchange="toastDismiss">
+    {{netStateBean.toastMsg}}
+</toast>-->
+
+
