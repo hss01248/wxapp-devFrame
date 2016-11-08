@@ -381,6 +381,15 @@ function isFunction(value){
 }
 
 
+function json2Form(json) {
+    var str = [];
+    for(var p in json){
+        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(json[p]));
+    }
+    return str.join("&");
+}
+
+
 // 封装网络请求通用的处理: 参数拼接和结果处理
 
 /**
@@ -400,7 +409,7 @@ function request(requestConfig){
     }
 
 
-    var paramStr = objToStr("&", requestConfig.params);//拼接请求参数成一个String
+    var paramStr = objToStr("&", requestConfig.params);//拼接请求参数成一个String    json2Form(requestConfig.params);
     if( isFunction(requestConfig.callback.onPre) ){
         requestConfig.callback.onPre();//请求发出前
     }
@@ -415,18 +424,24 @@ function request(requestConfig){
     }
 
 
+    var contentType ='';
     if (requestConfig.netMethod =='GET'){
         wholeUrl = wholeUrl+"?"+paramStr;
+        contentType = 'application/json';
     }else if (requestConfig.netMethod =='POST'){
-    //  body = paramStr;//行不通,str传递不过去
+     // body = paramStr;//行不通,str传递不过去,微信开发工具的bug
        // data:requestConfig.params; //这时传给服务器的是jsonObject,不符合本项目中的要求
         wholeUrl = wholeUrl+"?"+paramStr;//目前只能以get请求的方式发送post,这个还需要服务器支持get转post,fuck
+        contentType = "application/x-www-form-urlencoded";
     }
 
     //todo 能够使用cache-control吗?以目前这工具的尿性估计是不能吧
     wx.request({
         url: wholeUrl,
         method:requestConfig.netMethod,
+        head:{
+            'Content-Type':contentType
+        },
         data:body,
         success: function(res) {
             console.log(res);
@@ -1148,7 +1163,185 @@ function showContent1(that){
 }
 
 
+/**
+ * 调用微信的支付
+ */
+function pay(page,orderId,callback){
 
+    //先让服务器生成需要的字段,然后
+    var params = new Object();
+    params.orderId = orderId;
+    params.payway = 4;
+    buildRequest(page,'order/preparePay/v1.json',params,{
+        onPre: function(page){
+            showLoadingDialog(page);
+        },
+        onSuccess:function (data){
+
+            //调用微信支付
+            wx.requestPayment({
+                'timeStamp': data.timestamp,
+                'nonceStr': data.noncestr,
+                'package': data.package,
+                'signType': 'MD5',
+                'paySign': data.sign,
+                'success':function(res){
+                    console.log(res);
+                    callback.onSuccess('success')
+                    hideLoadingDialog(page)
+                    showSuccessToast(page,"支付成功")
+                },
+                'fail':function(res){
+                    console.log(res);
+                    callback.onError("支付失败了",0,res.toString());
+                    hideLoadingDialog(page)
+                }
+            })
+        },
+        onEmpty : function(){
+            callback.onEmpty()
+        },
+        onError : function(msgCanShow,code,hiddenMsg){
+            callback.onError(msgCanShow,code,hiddenMsg);
+            showSuccessToast(page,msgCanShow)
+        },
+        onUnlogin: function(){
+            this.onError("您还没有登录或登录已过期,请登录",code_unlogin,'')
+        },
+        onUnFound: function(){
+            this.onError("您要的内容没有找到",code_unfound,'')
+        }
+    }).send();
+
+
+}
+
+/*public int type;
+ public int id;
+ public String transId;
+ public int goodsId;
+ public String goodsName;
+ public String fee;
+ public String userName;
+ public int status;*/
+
+
+function newPayInfo(type,id,transId,goodsId,goodsName,fee,userName,status){
+    this.type = type;
+    this.id = id;
+    this.transId = transId;
+    this,goodsId = goodsId;
+    this.goodsName = goodsName;
+    this.fee = fee;
+    this.userName = userName;
+    this.status = status
+}
+
+
+/**
+ * 创建微课订单
+ */
+function createAudioOrder(that,audioId,discountCode,listener){
+    var url = 'order/voice/create/v1.json';
+    var params ={};
+    params.voiceId= audioId;
+    if(!isOptStrNull(discountCode)){
+        params.promoCode = discountCode;
+    }
+    buildRequest(that,url,params,{
+        onPre: function(){
+            showLoadingDialog(that);
+        },
+        onEnd: function(){
+            hideLoadingDialog(that);
+        },
+        onSuccess:function (data){
+            listener.onSuccess(data);
+        },
+        onEmpty : function(){
+            listener.onError("数据为空");
+        },
+        onError : function(msgCanShow,code,hiddenMsg){
+            listener.onError(msgCanShow);
+        },
+        onUnlogin: function(){
+            this.onError("您还没有登录或登录已过期,请登录",5,'')
+        },
+        onUnFound: function(){
+            this.onError("您要的内容没有找到",2,'')
+        }
+    }).send();
+
+}
+
+
+/**
+ * 创建专辑的订单
+ */
+function createAlbumOrder(){
+
+}
+
+function  thirdLogin(openId,name){
+    /*   map.put("type",type);
+     map.put("openId",openId);
+     map.put("name",name);
+     String imei = SPApi.Accout.getIEMI();
+     if (TextUtils.isEmpty(imei)){
+     imei = UUID.randomUUID()+"";
+     SPApi.Accout.setIEMI(imei);
+     }
+     map.put("imei",imei);
+     map.put("platform","Android");*/
+
+    var url = "http://test.qxinli.com/api.php?s=/user/thirdLogin";
+    var params = new Object();
+    params.openId = openId;
+    params.name = name;
+    params.type="weixin";
+    params.platform = "Android";
+    buildRequest(new Object(),url,params,{
+        onPre: function(page){},
+        onSuccess:function (data){
+            console.log(data);
+            getApp().globalData.session_id = data.session_id;
+            getApp().globalData.uid = data.uid;
+            getApp().globalData.isLogin = true;
+        },
+        onEmpty : function(){},
+        onError : function(msgCanShow,code,hiddenMsg){},
+        onUnlogin: function(){
+            this.onError("您还没有登录或登录已过期,请登录",code_unlogin,'')
+        },
+        onUnFound: function(){
+            this.onError("您要的内容没有找到",code_unfound,'')
+        }
+    }).setApiOld().send();
+}
+
+function loginTest(username,password){
+    var url = encodeURI("http://test.qxinli.com/api.php?s=/user/login");
+    var params = new Object();
+    params.username = username;
+    params.password = password;
+    params.platform = "Android";
+    buildRequest(new Object(),url,params,{
+        onPre: function(page){},
+        onSuccess:function (data){
+            getApp().globalData.session_id = data.session_id;
+            getApp().globalData.uid = data.uid;
+            getApp().globalData.isLogin = true;
+        },
+        onEmpty : function(){},
+        onError : function(msgCanShow,code,hiddenMsg){},
+        onUnlogin: function(){
+            this.onError("您还没有登录或登录已过期,请登录",code_unlogin,'')
+        },
+        onUnFound: function(){
+            this.onError("您要的内容没有找到",code_unfound,'')
+        }
+    }).setApiOld().send();
+}
 
 
 
@@ -1238,7 +1431,11 @@ module.exports = {
     dismissToast:dismissToast,
     showFailToast:showFailToast,
 
-
+    pay:pay,
+    newPayInfo:newPayInfo,
+    thirdLogin:thirdLogin,
+    loginTest:loginTest,
+    createAudioOrder:createAudioOrder,
     btnBean:btnBean,
     setBtnLoading:setBtnLoading,
     setBtnSuccess:setBtnSuccess,
