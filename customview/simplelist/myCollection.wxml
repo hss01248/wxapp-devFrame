@@ -8,7 +8,7 @@
 <!--todo listview-->
 
           <view class="list_data">
-              <block wx:for-items="{{infos}}" wx:for-item="info" wx:for-index="index">
+              <block wx:for-items="{{infos}}" wx:for-item="info" wx:for-index="index" wx:key="unique">
                   <navigator url="/pages/lession/{{info.classname}}?id={{info.id}}&title={{info.title}}" hover-class="">
                       <!--todo---listview: 这里写item的具体内容 -->
 
@@ -19,9 +19,9 @@
 
 <!--todo gridview  同时js中getListFromNetData()方法返回utils.to2DimensionArr(netData,columnNum);-->
 
-              <block wx:for-items="{{infos}}" wx:for-item="info" >
+              <block wx:for-items="{{infos}}" wx:for-item="info" wx:key="unique">
                   <view class="row-container">
-                      <block wx:for-items="{{info}}" wx:for-item="item">
+                      <block wx:for-items="{{info}}" wx:for-item="item" wx:key="unique2">
                           <navigator url="/pages/lession/album?id={{item.id}}" hover-class="">
                                 <!--todo gridview 这里写item具体的内容-->
 
@@ -36,26 +36,12 @@
           </view>
     </scroll-view>
 
-    <!--空白页面-->
-    <view class ="empty_view" wx:if="{{!netStateBean.emptyHidden}}"   >
-        <view class="center_wrapper" >
-            <view class="center_child" >
-                <icon type="info" size="45"/>
-                <view class="msg"> {{netStateBean.emptyMsg}}</view>
-            </view>
-        </view>
-    </view>
 
-    <!--错误页面-->
-    <view class ="error_view" wx:if="{{!netStateBean.errorHidden}}"  >
-        <view class="center_wrapper">
-            <view class="center_child" >
-                <icon type="warn" size="45" />
-                <view class="msg"> {{netStateBean.errorMsg}}</view>
-                <button  class = "retrybtn"  type="warn"  loading="{{loading}}"
-                         disabled="{{disabled}}" bindtap="onRetry" hover-class="other-button-hover"> 点击重试 </button>
-            </view>
-        </view>
+
+    <!--状态管理模板-->
+    <import src="../../template/pagestate.wxml"/>
+    <view >
+        <template is="pagestate" data="{{...netStateBean}}"/>
     </view>
 
 </view>

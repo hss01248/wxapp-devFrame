@@ -1,0 +1,46 @@
+
+<template name="pagestate" >
+
+    <view class ="empty_view" wx:if="{{!emptyHidden}}"   >
+        <view class="center_wrapper" >
+            <view class="center_child" >
+                <icon type="info" size="45"/>
+                <view class="msg"> {{emptyMsg}}</view>
+            </view>
+        </view>
+    </view>
+
+    <view class ="error_view" wx:if="{{!errorHidden}}"  >
+        <view class="center_wrapper">
+            <view class="center_child" >
+                <icon type="warn" size="45" />
+                <view class="msg"> {{errorMsg}}</view>
+                <button  class = "retrybtn"  type="warn"  loading="{{btnLoading}}"
+                         disabled="{{btnDisabled}}" catchtap="onRetry" hover-class="other-button-hover"> 点击重试 </button>
+            </view>
+        </view>
+    </view>
+
+
+
+
+    <!--<view class ="empty_view" wx:if="{{!netStateBean.emptyHidden}}"   >
+        <view class="center_wrapper" >
+            <view class="center_child" >
+                <icon type="info" size="45"/>
+                <view class="msg"> {{netStateBean.emptyMsg}}</view>
+            </view>
+        </view>
+    </view>
+
+    <view class ="error_view" wx:if="{{!netStateBean.errorHidden}}"  >
+        <view class="center_wrapper">
+            <view class="center_child" >
+                <icon type="warn" size="45" />
+                <view class="msg"> {{netStateBean.errorMsg}}</view>
+                <button  class = "retrybtn"  type="warn"  loading="{{loading}}"
+                         disabled="{{disabled}}" bindtap="onRetry" hover-class="other-button-hover"> 点击重试 </button>
+            </view>
+        </view>
+    </view>-->
+ </template>

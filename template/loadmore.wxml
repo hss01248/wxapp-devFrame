@@ -1,0 +1,7 @@
+
+<template name="loadmore" >
+
+    <view class="loadmore_view" wx:if="{{!netStateBean.loadmoreHidden}}" >
+        {{netStateBean.loadmoreMsg}}
+    </view>
+ </template>

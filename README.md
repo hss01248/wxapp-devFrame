@@ -18,7 +18,20 @@
 loading页面,空白页面,错误页面
 
 ```
-		//netUtil
+		//wxml里引用模板:直接拷贝这段代码
+		<!--状态管理模板-->
+        <import src="../../template/pagestate.wxml"/>
+        <view >
+            <template is="pagestate" data="{{...netStateBean}}"/>
+        </view>
+		
+		
+		//js里,page的data中加字段:
+		 netStateBean: new netUtil.netStateBean()
+		
+		
+		//网络回调处控制显示:netUtil
+		showLoadingDialog(that)
 		showContent(that)
         showErrorPage(that,msg)
         showEmptyPage(that)
@@ -31,6 +44,14 @@ loading页面,空白页面,错误页面
 
 
 # 纯listview和gridview页面的高度封装
+
+>只需要配置页面url,请求参数,返回的数据每个item字段的处理,wxml里写item的布局即可.无需关心页面状态,刷新和加载更多的ui和数据拼接.
+
+
+
+
+
+
 
 
 
